@@ -1,0 +1,6 @@
+microbiomas/inputFQfiles/
+microbiomas/dbs/
+results/
+*.RData
+*.rds
+.Rhistory
