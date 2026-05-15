@@ -83,11 +83,11 @@ cd 16S-microbiome-IBS
 
 ### 2. Create and activate the conda environment
 
-All software dependencies are pinned in `microbiomaLola.yml` (R 4.3.3, DADA2 1.30, phyloseq 1.46, Python 3.12, Kraken2, BLAST, cutadapt, and more):
+All software dependencies are pinned in `env.yml` (R 4.3.3, DADA2 1.30, phyloseq 1.46, Python 3.12, Kraken2, BLAST, cutadapt, and more):
 
 ```bash
-conda env create -f microbiomaLola.yml
-conda activate microbiomaLola
+conda env create -f env.yml
+conda activate microbiome_ibs
 ```
 
 ### 3. Download reference databases
@@ -125,7 +125,7 @@ cutadapt -a ^GTGCCAGCMGCCGCGGTAA \
 Open R or RStudio from within the activated conda environment:
 
 ```bash
-conda activate microbiomaLola
+conda activate microbiome_ibs
 Rscript extractASVs_Healthy_IBS.R
 # or interactively: rstudio extractASVs_Healthy_IBS.R
 ```
@@ -168,7 +168,7 @@ Key parameters in the script:
 | cutadapt | 5.2 | Primer trimming |
 | BLAST | 2.17.0 | Sequence alignment |
 
-Full dependency list: see `microbiomaLola.yml`
+Full dependency list: see `env.yml`
 
 ---
 

@@ -1,6 +1,55 @@
-microbiomas/inputFQfiles/
-microbiomas/dbs/
-results/
-*.RData
-*.rds
+# OS / Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# R
 .Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# Conda / virtual envs
+.conda/
+env/
+venv/
+.venv/
+
+# Logs / temp
+*.log
+*.tmp
+*~
+tmp/
+temp/
+
+# Raw sequencing data
+microbiomas/inputFQfiles/*.fastq
+microbiomas/inputFQfiles/*.fastq.gz
+microbiomas/inputFQfiles/*.fq
+microbiomas/inputFQfiles/*.fq.gz
+
+# filtered reads
+microbiomas/inputFQfiles/filtered/
+
+# Reference databases
+microbiomas/dbs/
+
+# Heavy bioinformatics files
+*.bam
+*.sam
+*.bai
+*.vcf
+*.vcf.gz
+
+# Results
+results/*
+
+# keep figures folder structure
+!results/figures/
+!results/figures/.gitkeep
+
+# optional tracked figures
+!results/figures/*.png
+!results/figures/*.pdf
+results/
