@@ -52,7 +52,7 @@ Raw reads (FASTQ)
 ```
 16S-microbiome-IBS/
 ├── extractASVs_Healthy_IBS.R    # Main DADA2 analysis script
-├── microbiomaLola.yml           # Conda environment (all dependencies pinned)
+├── env.yml           # Conda environment (all dependencies pinned)
 ├── microbiomas/
 │   ├── inputFQfiles/            # Raw paired-end FASTQ files (not tracked)
 │   │   ├── Healthy_F.fq.gz
