@@ -2,7 +2,7 @@
 # Runs DADA2 pipeline on a set of 16S rRNA gene, 2x250bp, in three samples: one Healthy donor ("Healthy"), one Irritable Bowel Syndrome with Constipation ("IBSC"), and one Irritable Bowel Syndrome with Diarrhea ("IBSD"), for the session "Microbiome 1".
 #BiocManager::install("dada2")
 library("dada2")
-options(witdh=140)
+options(width=140)
 
 baseDir <- paste0(getwd(), "/microbiomas/")
 list.files(baseDir)
@@ -130,7 +130,6 @@ write.table(countedTaxa, file=paste0(baseDir,"/counts_16S_RDP.tsv"), quote=FALSE
 write.table(cbind(countedTaxa, rownames(assignedTaxa)), file=paste0(baseDir,"/counts_s16S_sequences_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
 
 # use phyloseq to calculate biodiversity indices, and barplots, plot Exploratory Heat Maps...
-BiocManager::install("phyloseq")
 library("phyloseq")
 library("ggplot2")
 
