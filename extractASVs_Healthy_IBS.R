@@ -3,6 +3,7 @@
 #BiocManager::install("dada2")
 library("dada2")
 options(width=140)
+set.seed(123)
 
 baseDir <- paste0(getwd(), "/microbiomas/")
 list.files(baseDir)
@@ -45,11 +46,12 @@ abline(lm(table_filtered[,"reads.out"] ~ table_filtered[,"reads.in"]), col="cora
 # Learn the Error Rates: The DADA2 algorithm makes use of a parametric error model (err) and every amplicon dataset has a different set of error rates.
 
 errF <- learnErrors(filtFs, multithread=TRUE, verbose=TRUE)
+saveRDS(errF, file = paste0(baseDir, "errF.rds"))
 head(errF)
 
 errR <- learnErrors(filtRs, multithread=TRUE, verbose=TRUE, MAX_CONSIST=20) 
 # If we use the default, MAX_CONSIST=10, it will launch the message: Self-consistency loop terminated before convergence, so we increase a little the MAX_CONSIST parameter
-
+saveRDS(errR, file = paste0(baseDir, "errR.rds"))
 head(errR)
 
 # visualize the estimated error rates, first in the Fw, then in the Rv:
@@ -91,6 +93,7 @@ hist(nchar(getSequences(seqtab)), main="Distribution of sequence lengths", col="
 
 # Remove chimeras. Most of our reads should remain after chimera removal
 seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=TRUE, verbose=TRUE)
+saveRDS(seqtab.nochim, file = paste0(baseDir, "seqtab_nochim.rds"))
 # The fraction of chimeras varies based on factors including experimental procedures and sample complexity, but can be substantial. Here chimeras make up about 67% of the inferred sequence variants.
 dim(seqtab.nochim)
 # Proportion between reads without chimeras and starting reads
@@ -118,14 +121,7 @@ taxa.print <- assignedTaxa # Removing sequence rownames for display only
 rownames(taxa.print) <- NULL
 head(taxa.print)
 
-# Count sequences and add to global table without the sequence itself
-transposed_seqtab <- t(seqtab.nochim)
-countedTaxa <- matrix(nrow=dim(seqtab.nochim)[2], ncol=(dim(seqtab.nochim)[1]+7)) # Kingdom Phylum Class Order Family Genus Species
-colnames(countedTaxa) <- c(colnames(transposed_seqtab), colnames(assignedTaxa))
 
-for (sequence in 1:dim(seqtab.nochim)[2] ){
-  countedTaxa[sequence,] <- c(as.character(transposed_seqtab[sequence,]), as.character(assignedTaxa[sequence,]))
-} 
 write.table(countedTaxa, file=paste0(baseDir,"/counts_16S_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
 write.table(cbind(countedTaxa, rownames(assignedTaxa)), file=paste0(baseDir,"/counts_s16S_sequences_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
 
