@@ -52,4 +52,3 @@ results/*
 # optional tracked figures
 !results/figures/*.png
 !results/figures/*.pdf
-results/
