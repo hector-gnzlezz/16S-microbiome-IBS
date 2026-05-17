@@ -39,10 +39,12 @@ Raw reads (FASTQ)
     │                             ├── RDP Training Set 18 (default)
     │                             └── SILVA v138.1 (recommended, more RAM)
     │
-    └── Ecological analysis       phyloseq + ggplot2
-                                  ├── Alpha diversity (Shannon, Simpson, Chao1, Fisher)
-                                  ├── Relative abundance bar plots (Phylum → Family)
-                                  └── Heatmaps (Bray-Curtis NMDS ordination)
+    ├── Ecological analysis       phyloseq + ggplot2
+    │                             ├── Alpha diversity (Shannon, Simpson, Chao1, Fisher)
+    │                             ├── Relative abundance bar plots (Phylum → Family)
+    │                             └── Heatmaps (Bray-Curtis NMDS ordination)
+    │
+    └── BLASTN verification       topASVs_for_BLASTN.fasta (top 20 ASVs)
 ```
 
 ---
@@ -52,20 +54,14 @@ Raw reads (FASTQ)
 ```
 16S-microbiome-IBS/
 ├── extractASVs_Healthy_IBS.R    # Main DADA2 analysis script
-├── env.yml           # Conda environment (all dependencies pinned)
+├── env.yml                      # Conda environment (all dependencies pinned)
+├── topASVs_for_BLASTN.fasta     # Top 20 ASVs exported for BLASTN verification
 ├── microbiomas/
-│   ├── inputFQfiles/            # Raw paired-end FASTQ files (not tracked)
-│   │   ├── Healthy_F.fq.gz
-│   │   ├── Healthy_R.fq.gz
-│   │   ├── IBSC_F.fq.gz
-│   │   ├── IBSC_R.fq.gz
-│   │   ├── IBSD_F.fq.gz
-│   │   └── IBSD_R.fq.gz
+│   ├── inputFQfiles/            # Raw FASTQ files (not tracked — obtain from course)
 │   └── dbs/
-│       └── RDP/                 # RDP Training Set 18 (download separately)
+│       ├── RDP/                 # RDP Training Set 18 (not tracked — download separately)
+│       └── silvaDB/             # SILVA v138.1 (not tracked — download separately)
 ├── results/
-│   ├── counts_16S_RDP.tsv       # ASV count table with taxonomy
-│   ├── counts_s16S_sequences_RDP.tsv
 │   └── figures/                 # Quality plots, diversity plots, heatmaps
 └── README.md
 ```
@@ -92,19 +88,21 @@ conda activate microbiome_ibs
 
 ### 3. Download reference databases
 
-**RDP Training Set 18** (used by default — lower RAM requirements):
-```bash
-mkdir -p microbiomas/dbs/RDP
-# Download rdp_train_set_18.fa.gz and rdp_species_assignment_18.fa.gz
-# from: https://zenodo.org/record/4587955
-```
+> Reference databases are **not included** in this repository due to their size. Download them manually before running the pipeline.
+
+**RDP Training Set 18** (default — lower RAM requirements):
+- `rdp_train_set_18.fa.gz`
+- `rdp_species_assignment_18.fa.gz`
+- Download from: https://zenodo.org/record/4587955
+- Place in: `microbiomas/dbs/RDP/`
 
 **SILVA v138.1** (optional — recommended for species-level resolution):
-```bash
-mkdir -p microbiomas/dbs/silvaDB
-# Download silva_nr99_v138.1_wSpecies_train_set.fa.gz
-# from: https://zenodo.org/record/4587955
-```
+- `silva_nr99_v138.1_wSpecies_train_set.fa.gz`
+- `silva_species_assignment_v138.1.fa.gz`
+- Download from: https://zenodo.org/record/4587955
+- Place in: `microbiomas/dbs/silvaDB/`
+
+> **Raw FASTQ files** are not included in this repository. They are simulated data provided as part of the MSc Bioinformatics course (ISCIII · ENS · CNIO). Place them in `microbiomas/inputFQfiles/`.
 
 ### 4. (Optional) Trim primers with cutadapt
 
@@ -148,7 +146,7 @@ Key parameters in the script:
 | Raw reads (Fw) | 76,086 | 74,892 | 78,035 |
 | After filtering | ~55,626 | ~54,964 | ~57,865 |
 | After merging | ~51,851 | ~51,349 | ~53,998 |
-| Final ASVs (no chimeras) | 446 total across 3 samples |
+| Final ASVs (no chimeras) | 446 total across 3 samples | | |
 
 **Taxonomic findings** consistent with IBS literature:
 - ↑ *Firmicutes* (Lachnospiraceae, Ruminococcaceae) in IBS patients
@@ -165,8 +163,9 @@ Key parameters in the script:
 | DADA2 | 1.30.0 | ASV inference |
 | phyloseq | 1.46.0 | Ecological analysis |
 | ggplot2 | 3.5.2 | Visualization |
+| here | 1.0.2 | Portable file paths |
 | cutadapt | 5.2 | Primer trimming |
-| BLAST | 2.17.0 | Sequence alignment |
+| BLAST | 2.17.0 | Sequence alignment (BLASTN verification) |
 
 Full dependency list: see `env.yml`
 
@@ -182,5 +181,5 @@ Full dependency list: see `env.yml`
 
 ## Author
 
-**Héctor González Pérez** — [hectorgonzalezperez15@gmail.com](mailto:hectorgonzalezperez15@gmail.com)  
+**Héctor González Pérez** — [hectorgonzalezperez15@gmail.com]
 MSc Bioinformatics & Data Science · ISCIII · ENS · CNIO · Madrid
