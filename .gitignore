@@ -34,6 +34,10 @@ microbiomas/inputFQfiles/filtered/
 
 # Reference databases
 microbiomas/dbs/
+!microbiomas/dbs/RDP/
+!microbiomas/dbs/RDP/.gitkeep
+!microbiomas/dbs/silvaDB/
+!microbiomas/dbs/silvaDB/.gitkeep
 
 # Heavy bioinformatics files
 *.bam

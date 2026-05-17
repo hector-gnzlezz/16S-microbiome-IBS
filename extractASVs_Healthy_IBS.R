@@ -176,5 +176,16 @@ Genus_ps <- subset_taxa(ps, Genus=="Alistipes")
 Genus_ps <- prune_taxa(names(sort(taxa_sums(Genus_ps),TRUE)[1:30]), Genus_ps)
 plot_heatmap(Genus_ps, sample.label="Disease", "NMDS", "bray", "Species", low="#000033", high="#FF3300")
 
+# Export top ASVs to FASTA for optional BLASTN verification against NCBI nt
+# This allows cross-checking RDP taxonomic assignments at species level
+top_n <- 20
+top_seqs <- names(sort(taxa_sums(ps), decreasing=TRUE))[1:top_n]
+top_seqs_dna <- getSequences(seqtab.nochim)[colnames(seqtab.nochim) %in% top_seqs]
+fasta_out <- file(paste0(baseDir, "../topASVs_for_BLASTN.fasta"), "w")
+for (i in seq_along(top_seqs_dna)) {
+  writeLines(paste0(">ASV", i), fasta_out)
+  writeLines(top_seqs_dna[i], fasta_out)
+}
+close(fasta_out)
 
-# Remember these phyloseq functions because although in the Metagenomics session we will not use them, there will be homework :-)
+
