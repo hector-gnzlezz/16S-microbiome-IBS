@@ -119,6 +119,7 @@ cutadapt -a ^GTGCCAGCMGCCGCGGTAA \
 ---
 
 ## Running the analysis
+Note: The script must be run from the root of the repository (cd 16S-microbiome-IBS) so that here() correctly resolves all file paths relative to the project root.
 
 Open R or RStudio from within the activated conda environment:
 

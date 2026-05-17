@@ -2,10 +2,13 @@
 # Runs DADA2 pipeline on a set of 16S rRNA gene, 2x250bp, in three samples: one Healthy donor ("Healthy"), one Irritable Bowel Syndrome with Constipation ("IBSC"), and one Irritable Bowel Syndrome with Diarrhea ("IBSD"), for the session "Microbiome 1".
 #BiocManager::install("dada2")
 library("dada2")
+library("here")
 options(width=140)
 set.seed(123)
 
-library("here")
+# Redirect all plots to results/figures/
+pdf(here("results", "figures", "16S_analysis_plots.pdf"))
+
 baseDir <- here("microbiomas")
 
 list.files(baseDir)
@@ -48,12 +51,12 @@ abline(lm(table_filtered[,"reads.out"] ~ table_filtered[,"reads.in"]), col="cora
 # Learn the Error Rates: The DADA2 algorithm makes use of a parametric error model (err) and every amplicon dataset has a different set of error rates.
 
 errF <- learnErrors(filtFs, multithread=TRUE, verbose=TRUE)
-saveRDS(errF, file = file.path(baseDir, "errF.rds"))
+saveRDS(errF, file = here("results", "errF.rds"))
 head(errF)
 
 errR <- learnErrors(filtRs, multithread=TRUE, verbose=TRUE, MAX_CONSIST=20) 
 # If we use the default, MAX_CONSIST=10, it will launch the message: Self-consistency loop terminated before convergence, so we increase a little the MAX_CONSIST parameter
-saveRDS(errR, file = file.path(baseDir, "errR.rds"))
+saveRDS(errR, file = here("results", "errR.rds"))
 head(errR)
 
 # visualize the estimated error rates, first in the Fw, then in the Rv:
@@ -95,7 +98,7 @@ hist(nchar(getSequences(seqtab)), main="Distribution of sequence lengths", col="
 
 # Remove chimeras. Most of our reads should remain after chimera removal
 seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=TRUE, verbose=TRUE)
-saveRDS(seqtab.nochim, file = file.path(baseDir, "seqtab_nochim.rds"))
+saveRDS(seqtab.nochim, file = here("results", "seqtab_nochim.rds"))
 # The fraction of chimeras varies based on factors including experimental procedures and sample complexity, but can be substantial. Here chimeras make up about 67% of the inferred sequence variants.
 dim(seqtab.nochim)
 # Proportion between reads without chimeras and starting reads
@@ -126,8 +129,8 @@ head(taxa.print)
 
 countedTaxa <- cbind(t(seqtab.nochim), assignedTaxa)
 
-write.table(countedTaxa, file=file.path(baseDir, "counts_16S_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
-write.table(cbind(countedTaxa, rownames(assignedTaxa)), file=file.path(baseDir, "counts_s16S_sequences_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
+write.table(countedTaxa, file=here("results", "counts_16S_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
+write.table(cbind(countedTaxa, rownames(assignedTaxa)), file=here("results", "counts_s16S_sequences_RDP.tsv"), quote=FALSE, col.names=NA, sep="\t")
 
 # use phyloseq to calculate biodiversity indices, and barplots, plot Exploratory Heat Maps...
 library("phyloseq")
@@ -190,6 +193,7 @@ for (i in seq_along(top_seqs_dna)) {
   writeLines(paste0(">ASV", i), fasta_out)
   writeLines(top_seqs_dna[i], fasta_out)
 }
+dev.off()
 close(fasta_out)
 
 
